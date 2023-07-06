@@ -17,16 +17,24 @@
 // one is a lot shorter!
 // Execute `rustlings hint errors2` or use the `hint` watch subcommand for a hint.
 
-// I AM NOT DONE
 
 use std::num::ParseIntError;
+
+pub fn total_cost_improved(item_quantity: &str) -> Result<i32, ParseIntError> {
+    let processing_fee = 1;
+    let cost_per_item = 5;
+    let qty = item_quantity.parse::<i32>()?;
+
+    Ok(qty * cost_per_item + processing_fee)
+}
 
 pub fn total_cost(item_quantity: &str) -> Result<i32, ParseIntError> {
     let processing_fee = 1;
     let cost_per_item = 5;
-    let qty = item_quantity.parse::<i32>();
-
-    Ok(qty * cost_per_item + processing_fee)
+    match item_quantity.parse::<i32>() {
+        Ok(qty) => return Ok(qty * cost_per_item + processing_fee),
+        Err(e) => return Err(e)
+    }
 }
 
 #[cfg(test)]
@@ -35,13 +43,13 @@ mod tests {
 
     #[test]
     fn item_quantity_is_a_valid_number() {
-        assert_eq!(total_cost("34"), Ok(171));
+        assert_eq!(total_cost_improved("34"), Ok(171));
     }
 
     #[test]
     fn item_quantity_is_an_invalid_number() {
         assert_eq!(
-            total_cost("beep boop").unwrap_err().to_string(),
+            total_cost_improved("beep boop").unwrap_err().to_string(),
             "invalid digit found in string"
         );
     }
